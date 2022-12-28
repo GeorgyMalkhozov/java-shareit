@@ -1,31 +1,28 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.item.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.validation.annotation.Validated;
-import ru.practicum.shareit.request.ItemRequest;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.request.dto.ItemRequestDTO;
+import ru.practicum.shareit.user.dto.UserDTO;
 
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-@AllArgsConstructor
 @Data
-@EqualsAndHashCode
 @Builder
+@AllArgsConstructor
 @Validated
-public class Item {
+public class ItemDTO {
 
-    @Id
     private Integer id;
     @NotBlank(message = "название вещи не должно быть пустым")
     private String name;
     @NotBlank(message = "описание вещи не должно быть пустым")
     private String description;
-    @NotBlank(message = "доступность вещи не должна быть пустой")
+    @NotNull
     private Boolean available;
-    private User owner;
-    private ItemRequest request;
+    private UserDTO owner;
+    private ItemRequestDTO request;
 }
