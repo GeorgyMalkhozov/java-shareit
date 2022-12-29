@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.storage;
 import lombok.Data;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exceptions.ItemAccessDeniedException;
+import ru.practicum.shareit.exceptions.NoItemsFoundBySearchException;
 import ru.practicum.shareit.exceptions.UnknownIdException;
 import ru.practicum.shareit.item.model.Item;
 
@@ -27,11 +28,21 @@ public class InMemoryItemStorage implements ItemStorage {
     }
 
     public List<Item> searchItems(String text) {
-        return items.values().stream()
+        if (text.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<Item> foundItems = items.values().stream()
                 .filter(Item::getAvailable)
                 .filter(str -> (str.getName().toLowerCase().contains(text.toLowerCase()))
                         || (str.getDescription().toLowerCase().contains(text.toLowerCase())))
                 .collect(Collectors.toList());
+
+        if (foundItems.isEmpty()) {
+            throw new NoItemsFoundBySearchException("Не найдены вещи содержащие '" + text + "'");
+        } else {
+            return foundItems;
+        }
     }
 
     public Item putItem(Item item) {

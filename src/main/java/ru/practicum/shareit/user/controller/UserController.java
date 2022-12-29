@@ -2,7 +2,6 @@ package ru.practicum.shareit.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.user.dto.UserDTO;
 import ru.practicum.shareit.user.dto.UserUpdateDTO;
 import ru.practicum.shareit.user.model.User;
@@ -16,12 +15,10 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final ItemMapper itemMapper;
 
     @Autowired
-    public UserController(UserService userService, ItemMapper itemMapper) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.itemMapper = itemMapper;
     }
 
     @PostMapping
