@@ -3,8 +3,8 @@ package ru.practicum.shareit.user.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDTO;
+import ru.practicum.shareit.user.dto.UserResponseDTO;
 import ru.practicum.shareit.user.dto.UserUpdateDTO;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import javax.validation.Valid;
@@ -22,18 +22,18 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDTO addUser(@RequestBody @Valid UserDTO dto) {
+    public UserResponseDTO addUser(@RequestBody @Valid UserDTO dto) {
         return userService.addUser(dto);
     }
 
     @GetMapping("/{id}")
-    public UserDTO getUser(@PathVariable Integer id) {
+    public UserResponseDTO getUser(@PathVariable Integer id) {
         return userService.getUser(id);
     }
 
     @PutMapping
-    public UserDTO putUser(@Valid @RequestBody User user) {
-        return userService.putUser(user);
+    public UserResponseDTO putUser(@Valid @RequestBody UserDTO dto) {
+        return userService.putUser(dto);
     }
 
     @DeleteMapping("/{id}")
@@ -42,12 +42,12 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDTO> findAllUsers() {
+    public List<UserResponseDTO> findAllUsers() {
         return userService.findAllUsers();
     }
 
     @PatchMapping("/{id}")
-    public UserDTO updateItem(@PathVariable Integer id, @RequestBody @Valid UserUpdateDTO updateDto) {
+    public UserResponseDTO updateItem(@PathVariable Integer id, @RequestBody @Valid UserUpdateDTO updateDto) {
         return userService.updateUser(id, updateDto);
     }
 }

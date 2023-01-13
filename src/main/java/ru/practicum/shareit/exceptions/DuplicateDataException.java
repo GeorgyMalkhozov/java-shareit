@@ -3,8 +3,8 @@ package ru.practicum.shareit.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-public class DuplicateEmailException extends ResponseStatusException {
-    public DuplicateEmailException(String message) {
+public class DuplicateDataException extends ResponseStatusException {
+    public DuplicateDataException(String message) {
         super(HttpStatus.CONFLICT, message);
     }
 

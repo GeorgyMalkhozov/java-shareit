@@ -18,7 +18,7 @@ public class UserDTO {
 
     private Integer id;
     private String name;
-    @Email(message = "'email' should not be blank")
+    @Email(message = "электронная почта не соответствует формату")
     @NotBlank(message = "электронная почта не должна быть пустой")
     private String email;
 }

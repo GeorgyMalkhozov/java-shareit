@@ -3,16 +3,21 @@ package ru.practicum.shareit.exceptions;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,18 +31,44 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @ExceptionHandler({DuplicateEmailException.class})
+    @ExceptionHandler({DuplicateDataException.class, DataIntegrityViolationException.class})
     protected ResponseEntity<Object> handleConflictException(Exception exception, WebRequest request) {
         log.error(exception.getMessage());
         ApiError apiError = new ApiError(exception.getClass().getSimpleName(), exception.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler({ItemAccessDeniedException.class})
-    protected ResponseEntity<Object> handleAccessDeniedException(Exception exception, WebRequest request) {
+    @ExceptionHandler({ObjectAccessDeniedException.class})
+    protected ResponseEntity<Object> handleObjectAccessDeniedException(Exception exception, WebRequest request) {
         log.error(exception.getMessage());
         ApiError apiError = new ApiError(exception.getClass().getSimpleName(), exception.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler({ItemUnavailableException.class, NegativeBookingLengthException.class,
+            NoCommentWithoutBookingException.class, WrongApproveException.class})
+    protected ResponseEntity<Object> handleBadRequestTypeException(Exception exception, WebRequest request) {
+        log.error(exception.getMessage());
+        ApiError apiError = new ApiError(exception.getClass().getSimpleName(), exception.getLocalizedMessage());
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+   /* @ExceptionHandler({DataIntegrityViolationException.class})
+    protected ResponseEntity<Object> handleDataIntegrityViolationException(Exception exception, WebRequest request) {
+        log.error(exception.getMessage());
+        ApiError apiError = new ApiError(exception.getClass().getSimpleName(), exception.getMessage());
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
+*/
+    @ExceptionHandler({ConstraintViolationException.class})
+    public ResponseEntity<Object> handleConstraintViolationException(final ConstraintViolationException exception,
+                                                                     WebRequest request) {
+        List<String> listError = exception.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toList());
+        log.error(exception.getMessage());
+        ApiError apiError = new ApiError(exception.getClass().getSimpleName(), listError.toString());
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
@@ -52,7 +83,7 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({UnknownIdException.class, SqlException.class, NoItemsFoundBySearchException.class})
+    @ExceptionHandler({UnknownIdException.class, SqlException.class, NoObjectsFoundException.class})
     protected ResponseEntity<Object> handleNotFound(Exception exception, WebRequest request) {
         log.error(exception.getMessage());
         ApiError apiError = new ApiError(exception.getClass().getSimpleName(), exception.getMessage());
@@ -68,6 +99,13 @@ public class CustomExceptionHandler {
 
         ApiError apiError = new ApiError("Поля JSON заполнены некорректно", exception.getMessage());
         return new ResponseEntity<>(apiError, status);
+    }
+
+    @ExceptionHandler(NoSuchStateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleNoSuchElementException(final NoSuchStateException e) {
+        log.error(e.getMessage());
+        return Map.of("error", e.getLocalizedMessage());
     }
 
     @ExceptionHandler(Exception.class)

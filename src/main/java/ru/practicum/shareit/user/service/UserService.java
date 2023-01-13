@@ -1,12 +1,15 @@
 package ru.practicum.shareit.user.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exceptions.UnknownIdException;
 import ru.practicum.shareit.user.dto.UserDTO;
+import ru.practicum.shareit.user.dto.UserResponseDTO;
 import ru.practicum.shareit.user.dto.UserUpdateDTO;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserStorage;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,41 +17,63 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    private final UserStorage userStorage;
+    private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserStorage userStorage, UserMapper userMapper) {
-        this.userStorage = userStorage;
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
 
-    public UserDTO addUser(UserDTO dto) {
-        User user = userStorage.addUser(userMapper.userDtoToUser(dto));
-        return userMapper.userToUserDto(user);
+    @Transactional
+    public UserResponseDTO addUser(UserDTO dto) {
+        User user = userRepository.save(userMapper.userDtoToUser(dto));
+        return userMapper.userToUserResponseDto(user);
     }
 
-    public UserDTO getUser(Integer id) {
-        return userMapper.userToUserDto(userStorage.getUser(id));
+    @Transactional(readOnly = true)
+    public UserResponseDTO getUser(Integer id) {
+        return userMapper.userToUserResponseDto(getUserById(id));
     }
 
-    public UserDTO putUser(User user) {
-        return userMapper.userToUserDto(userStorage.putUser(user));
+    @Transactional
+    public UserResponseDTO putUser(UserDTO dto) {
+        checkUserExist(dto.getId());
+        User user = userRepository.save(userMapper.userDtoToUser(dto));
+        return userMapper.userToUserResponseDto(userRepository.save(user));
     }
 
+    @Transactional
     public void deleteUser(Integer id) {
-        userStorage.deleteUser(id);
+        checkUserExist(id);
+        userRepository.deleteById(id);
     }
 
-    public List<UserDTO> findAllUsers() {
-        return userStorage.findAllUsers().stream()
-                .map(userMapper::userToUserDto)
+    @Transactional(readOnly = true)
+    public List<UserResponseDTO> findAllUsers() {
+        return userRepository.findAll().stream()
+                .map(userMapper::userToUserResponseDto)
                 .collect(Collectors.toList());
     }
 
-    public UserDTO updateUser(Integer id, UserUpdateDTO dto) {
-        userStorage.checkUserId(id);
-        User user = userMapper.userUpdateDtoToUser(dto);
-        return userMapper.userToUserDto(userStorage.updateUser(id, user));
+    @Transactional
+    public UserResponseDTO updateUser(Integer id, UserUpdateDTO dto) {
+        User user = getUserById(id);
+        userMapper.updateUserFromDto(dto, user);
+        userRepository.save(user);
+        return userMapper.userToUserResponseDto(user);
+    }
+
+    @Transactional(readOnly = true)
+    public User getUserById(Integer id) {
+        checkUserExist(id);
+        return userRepository.getById(id);
+    }
+
+    public void checkUserExist(Integer userId) {
+        if (!userRepository.findById(userId).isPresent()) {
+            throw new UnknownIdException("Пользователь с id = " + userId + " не существует");
+        }
     }
 }

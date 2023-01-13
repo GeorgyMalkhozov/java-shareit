@@ -3,7 +3,10 @@ package ru.practicum.shareit.item.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDTO;
+import ru.practicum.shareit.item.dto.ItemResponseDTO;
 import ru.practicum.shareit.item.dto.ItemUpdateDTO;
+import ru.practicum.shareit.item.dto.comment.CommentDTO;
+import ru.practicum.shareit.item.dto.comment.CommentResponseDTO;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
@@ -21,22 +24,22 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDTO addItem(@RequestBody @Valid ItemDTO dto, @RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public ItemResponseDTO addItem(@RequestBody @Valid ItemDTO dto, @RequestHeader("X-Sharer-User-Id") Integer userId) {
         return itemService.addItem(dto, userId);
     }
 
     @GetMapping("/{id}")
-    public ItemDTO getItem(@PathVariable Integer id) {
-        return itemService.getItem(id);
+    public ItemResponseDTO getItem(@PathVariable Integer id, @RequestHeader("X-Sharer-User-Id") Integer userId) {
+        return itemService.getItem(id, userId);
     }
 
     @GetMapping("/search")
-    public List<ItemDTO> searchItems(@RequestParam String text) {
+    public List<ItemResponseDTO> searchItems(@RequestParam String text) {
         return itemService.searchItems(text);
     }
 
     @PutMapping
-    public ItemDTO putItem(@Valid @RequestBody ItemDTO dto, @RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public ItemResponseDTO putItem(@Valid @RequestBody ItemDTO dto, @RequestHeader("X-Sharer-User-Id") Integer userId) {
         return itemService.putItem(dto, userId);
     }
 
@@ -46,13 +49,19 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDTO> findAllItems(@RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public List<ItemResponseDTO> findAllItems(@RequestHeader("X-Sharer-User-Id") Integer userId) {
         return itemService.findAllItems(userId);
     }
 
     @PatchMapping("/{id}")
-    public ItemDTO updateItem(@PathVariable Integer id, @RequestBody @Valid ItemUpdateDTO updateDto,
+    public ItemResponseDTO updateItem(@PathVariable Integer id, @RequestBody @Valid ItemUpdateDTO updateDto,
                            @RequestHeader("X-Sharer-User-Id") Integer userId) {
         return itemService.updateItem(id, updateDto, userId);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentResponseDTO addComment(@RequestBody @Valid CommentDTO dto, @PathVariable Integer itemId,
+                                         @RequestHeader("X-Sharer-User-Id") Integer userId) {
+        return itemService.addComment(dto, itemId, userId);
     }
 }
