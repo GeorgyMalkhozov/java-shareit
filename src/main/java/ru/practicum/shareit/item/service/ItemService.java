@@ -108,7 +108,7 @@ public class ItemService {
 
     @Transactional(readOnly = true)
     public List<ItemResponseDTO> findAllItems(Integer userId) {
-        List<ItemResponseDTO> list = itemRepository.findAllByOwnerId(userId).stream()
+        List<ItemResponseDTO> list = itemRepository.findAllByOwnerIdOrderByIdAsc(userId).stream()
                 .map(itemMapper::itemToItemResponseDto)
                 .collect(Collectors.toList());
         list.forEach(bookingService::addLastAndNextBookingsToItem);

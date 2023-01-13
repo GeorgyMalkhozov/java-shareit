@@ -176,7 +176,7 @@ public class BookingService {
     }
 
     private void checkOwnerHasItemsToBook(Integer userId) {
-        if (itemRepository.findAllByOwnerId(userId).isEmpty()) {
+        if (itemRepository.findAllByOwnerIdOrderByIdAsc(userId).isEmpty()) {
             throw new UnknownIdException("У пользователя нет вещей в аренде");
         }
     }
