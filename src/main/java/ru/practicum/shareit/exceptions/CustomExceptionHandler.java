@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -34,7 +35,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler({DuplicateDataException.class, DataIntegrityViolationException.class})
     protected ResponseEntity<Object> handleConflictException(Exception exception, WebRequest request) {
         log.error(exception.getMessage());
-        ApiError apiError = new ApiError(exception.getClass().getSimpleName(), exception.getMessage());
+        ApiError apiError = new ApiError(exception.getClass().getSimpleName(), exception.getLocalizedMessage());
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
@@ -53,13 +54,6 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
-   /* @ExceptionHandler({DataIntegrityViolationException.class})
-    protected ResponseEntity<Object> handleDataIntegrityViolationException(Exception exception, WebRequest request) {
-        log.error(exception.getMessage());
-        ApiError apiError = new ApiError(exception.getClass().getSimpleName(), exception.getMessage());
-        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
-    }
-*/
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<Object> handleConstraintViolationException(final ConstraintViolationException exception,
                                                                      WebRequest request) {
@@ -80,6 +74,16 @@ public class CustomExceptionHandler {
                 .collect(Collectors.toList());
 
         ApiError apiError = new ApiError(exception.getClass().getSimpleName(), "", errors);
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class})
+    protected ResponseEntity<Object> handleMethodArgumentTypeMismatchException(
+            MethodArgumentTypeMismatchException exception, WebRequest request) {
+        log.error(exception.getMessage());
+        ApiError apiError = new ApiError(exception.getClass().getSimpleName(),
+                "Указан некорректный тип данных для X-Sharer-User-Id");
+
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 

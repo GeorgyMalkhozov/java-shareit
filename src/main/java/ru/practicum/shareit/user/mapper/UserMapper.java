@@ -1,9 +1,7 @@
 package ru.practicum.shareit.user.mapper;
 
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
+import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.user.dto.UserDTO;
 import ru.practicum.shareit.user.dto.UserResponseDTO;
 import ru.practicum.shareit.user.dto.UserUpdateDTO;
@@ -19,5 +17,5 @@ public interface UserMapper {
     User userDtoToUser(UserDTO dto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateUserFromDto(UserUpdateDTO userUpdateDTO, @MappingTarget User user);
+    void updateUserFromDto(UserUpdateDTO userUpdateDTO, @MappingTarget @Validated User user);
 }

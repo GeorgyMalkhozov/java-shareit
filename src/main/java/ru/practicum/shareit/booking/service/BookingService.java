@@ -60,7 +60,7 @@ public class BookingService {
 
     @Transactional(readOnly = true)
     public List<BookingResponseEntityDTO> findAllBookingsByCurrentUser(Integer userId, String bookingState) {
-        userService.checkUserExist(userId);
+        userService.checkUserIdExist(userId);
         List<Booking> bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(userId);
         return filterForResponse(bookings, bookingState).stream()
                 .map(bookingMapper::bookingToBookingResponseEntityDto)
@@ -69,7 +69,7 @@ public class BookingService {
 
     @Transactional(readOnly = true)
     public List<BookingResponseEntityDTO> findAllBookingsForOwner(Integer userId, String bookingState) {
-        userService.checkUserExist(userId);
+        userService.checkUserIdExist(userId);
         checkOwnerHasItemsToBook(userId);
         List<Booking> bookings = bookingRepository.findAllBookingsForOwner(userId);
         return filterForResponse(bookings, bookingState).stream()
@@ -144,7 +144,7 @@ public class BookingService {
 
     private void preAddCheckForBooking(BookingDTO bookingDto, Integer userId) {
         checkEndDateIsAfterStartDateExist(bookingDto);
-        userService.checkUserExist(userId);
+        userService.checkUserIdExist(userId);
         itemCheckDao.checkItemExist(bookingDto.getItemId());
         itemCheckDao.checkItemAvailability(bookingDto.getItemId());
         checkOwnerIsNotBooker(bookingDto.getItemId(), userId);
@@ -152,7 +152,7 @@ public class BookingService {
 
     private void preApproveBookingCheck(Integer bookingId, Integer userId) {
         checkBookingExist(bookingId);
-        userService.checkUserExist(userId);
+        userService.checkUserIdExist(userId);
         itemCheckDao.checkUserAccessToItem(userId, bookingRepository.getById(bookingId).getItem());
         checkCorrectStatusBeforeBookingApproval(bookingId);
     }

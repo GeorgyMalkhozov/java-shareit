@@ -52,7 +52,7 @@ public class ItemService {
 
     @Transactional
     public ItemResponseDTO addItem(ItemDTO itemDto, Integer userId) {
-        userService.checkUserExist(userId);
+        userService.checkUserIdExist(userId);
         Item item = itemMapper.itemDtoToItem(itemDto);
         addOwnerToItem(item, userId);
         itemRepository.save(item);
@@ -131,7 +131,7 @@ public class ItemService {
     }
 
     private void preAddCommentCheck(Integer itemId, Integer userId) {
-        userService.checkUserExist(userId);
+        userService.checkUserIdExist(userId);
         itemCheckDao.checkItemExist(itemId);
         bookingService.checkCommentatorWasABookerBeforeComment(itemId, userId);
         checkRepeatedCommentByAuthor(itemId, userId);
