@@ -5,8 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import ru.practicum.shareit.request.dto.ItemRequestDTO;
+import ru.practicum.shareit.booking.dto.BookingForItemResponseEntityDTO;
+import ru.practicum.shareit.item.dto.comment.CommentResponseDTO;
 import ru.practicum.shareit.user.dto.UserDTO;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,5 +23,7 @@ public class ItemResponseDTO {
     private String description;
     private Boolean available;
     private UserDTO owner;
-    private ItemRequestDTO request;
+    private List<CommentResponseDTO> comments;
+    private BookingForItemResponseEntityDTO lastBooking;
+    private BookingForItemResponseEntityDTO nextBooking;
 }

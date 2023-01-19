@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.dto;
+package ru.practicum.shareit.item.dto.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,7 @@ import org.springframework.validation.annotation.Validated;
 @AllArgsConstructor
 @NoArgsConstructor
 @Validated
-public class UserResponseDTO {
+public class CommentDTO {
 
-    private Integer id;
-    private String name;
-    private String email;
+    private String text;
 }
