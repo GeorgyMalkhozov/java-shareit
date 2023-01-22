@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.service.BookingService;
@@ -19,6 +20,7 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -31,6 +33,7 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
     private final UserService userService;
     private final BookingService bookingService;
     private final ItemMapper itemMapper;
@@ -38,11 +41,13 @@ public class ItemService {
     private final ItemCheckDao itemCheckDao;
 
     @Autowired
-    public ItemService(ItemRepository itemRepository, CommentRepository commentRepository, UserService userService,
+    public ItemService(ItemRepository itemRepository, CommentRepository commentRepository,
+                       ItemRequestRepository itemRequestRepository, UserService userService,
                        ItemMapper itemMapper, BookingService bookingService, CommentMapper commentMapper,
                        ItemCheckDao itemCheckDao) {
         this.itemRepository = itemRepository;
         this.commentRepository = commentRepository;
+        this.itemRequestRepository = itemRequestRepository;
         this.userService = userService;
         this.itemMapper = itemMapper;
         this.bookingService = bookingService;
@@ -55,6 +60,7 @@ public class ItemService {
         userService.checkUserIdExist(userId);
         Item item = itemMapper.itemDtoToItem(itemDto);
         addOwnerToItem(item, userId);
+        addRequestToItem(item, itemDto.getRequestId());
         itemRepository.save(item);
         return itemMapper.itemToItemResponseDto(item);
     }
@@ -80,11 +86,12 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<ItemResponseDTO> searchItems(String text) {
+    public List<ItemResponseDTO> searchItems(String text, Integer from, Integer size) {
         if (text.isEmpty()) {
             return new ArrayList<>();
         }
-        List<ItemResponseDTO> foundItems = itemRepository.searchItemsContainsText(text.toLowerCase()).stream()
+        List<ItemResponseDTO> foundItems = itemRepository
+                .searchItemsContainsText(text.toLowerCase(), PageRequest.of(from / size, size)).toList().stream()
                 .map(itemMapper::itemToItemResponseDto)
                 .collect(Collectors.toList());
         if (foundItems.isEmpty()) {
@@ -107,8 +114,10 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<ItemResponseDTO> findAllItems(Integer userId) {
-        List<ItemResponseDTO> list = itemRepository.findAllByOwnerIdOrderByIdAsc(userId).stream()
+    public List<ItemResponseDTO> findAllItems(Integer userId, Integer from, Integer size) {
+        List<ItemResponseDTO> list = itemRepository.
+                findAllByOwnerIdOrderByIdAsc(userId, PageRequest.of(from / size, size)).toList()
+                .stream()
                 .map(itemMapper::itemToItemResponseDto)
                 .collect(Collectors.toList());
         list.forEach(bookingService::addLastAndNextBookingsToItem);
@@ -142,6 +151,12 @@ public class ItemService {
         item.setOwner(userService.getUserById(userId));
     }
 
+    private void addRequestToItem(Item item, Integer requestId) {
+        if (requestId != null) {
+            item.setRequest(itemRequestRepository.getById(requestId));
+        }
+    }
+
     private void addAuthorToComment(Comment comment, Integer userId) {
         comment.setAuthor(userService.getUserById(userId));
     }
@@ -171,5 +186,11 @@ public class ItemService {
         if (!commentRepository.findAllByItemIdAndAuthorId(itemId, userId).isEmpty()) {
             throw new DuplicateDataException("Пользователь уже осталвял отзвыв на эту вещь ранее");
         }
+    }
+
+    public List<ItemResponseDTO> getItemsToItemRequest(Integer requestId) {
+        return itemRepository.findAllByRequestIdOrderByIdAsc(requestId).stream()
+                .map(itemMapper::itemToItemResponseDto)
+                .collect(Collectors.toList());
     }
 }

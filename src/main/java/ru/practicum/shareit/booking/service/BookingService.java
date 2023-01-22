@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDTO;
@@ -59,19 +60,23 @@ public class BookingService {
     }
 
     @Transactional(readOnly = true)
-    public List<BookingResponseEntityDTO> findAllBookingsByCurrentUser(Integer userId, String bookingState) {
+    public List<BookingResponseEntityDTO> findAllBookingsByCurrentUser(Integer userId, String bookingState,
+                                                                       Integer from, Integer size) {
         userService.checkUserIdExist(userId);
-        List<Booking> bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(userId);
+        List<Booking> bookings = bookingRepository
+                .findAllByBookerIdOrderByStartDesc(userId, PageRequest.of(from / size, size)).toList();
         return filterForResponse(bookings, bookingState).stream()
                 .map(bookingMapper::bookingToBookingResponseEntityDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<BookingResponseEntityDTO> findAllBookingsForOwner(Integer userId, String bookingState) {
+    public List<BookingResponseEntityDTO> findAllBookingsForOwner(Integer userId, String bookingState,
+                                                                  Integer from, Integer size) {
         userService.checkUserIdExist(userId);
         checkOwnerHasItemsToBook(userId);
-        List<Booking> bookings = bookingRepository.findAllBookingsForOwner(userId);
+        List<Booking> bookings = bookingRepository.findAllBookingsForOwner(userId,
+                PageRequest.of(from / size, size)).toList();
         return filterForResponse(bookings, bookingState).stream()
                 .map(bookingMapper::bookingToBookingResponseEntityDto)
                 .collect(Collectors.toList());

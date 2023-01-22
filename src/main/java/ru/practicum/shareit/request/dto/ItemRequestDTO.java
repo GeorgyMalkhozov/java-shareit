@@ -3,20 +3,18 @@ package ru.practicum.shareit.request.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareit.user.dto.UserDTO;
+import lombok.NoArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Validated
 public class ItemRequestDTO {
 
-    private Integer id;
+    @NotBlank(message = "описание не должно быть пустым")
     private String description;
-    private UserDTO requestor;
-    private LocalDateTime created;
 }

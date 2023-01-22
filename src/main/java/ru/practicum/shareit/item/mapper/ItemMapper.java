@@ -1,9 +1,6 @@
 package ru.practicum.shareit.item.mapper;
 
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 import ru.practicum.shareit.item.dto.ItemDTO;
 import ru.practicum.shareit.item.dto.ItemResponseDTO;
 import ru.practicum.shareit.item.dto.ItemUpdateDTO;
@@ -13,8 +10,10 @@ import ru.practicum.shareit.user.mapper.UserMapper;
 @Mapper(uses = {UserMapper.class, CommentMapper.class}, componentModel = "spring")
 public interface ItemMapper {
 
+    @Mapping(target = "requestId", source = "item.request.id")
     ItemResponseDTO itemToItemResponseDto(Item item);
 
+    @Mapping(target = "request", ignore = true)
     Item itemDtoToItem(ItemDTO dto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

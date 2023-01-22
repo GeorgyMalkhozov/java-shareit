@@ -26,4 +26,5 @@ public class ItemResponseDTO {
     private List<CommentResponseDTO> comments;
     private BookingForItemResponseEntityDTO lastBooking;
     private BookingForItemResponseEntityDTO nextBooking;
+    private Integer requestId;
 }

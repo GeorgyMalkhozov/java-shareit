@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import ru.practicum.shareit.request.dto.ItemRequestDTO;
 import ru.practicum.shareit.user.dto.UserDTO;
 
 import javax.validation.constraints.NotBlank;
@@ -27,4 +28,5 @@ public class ItemDTO {
     private Boolean available;
     @Null
     private UserDTO owner;
+    private Integer requestId;
 }
