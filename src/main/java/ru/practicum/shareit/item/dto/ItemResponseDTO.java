@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.booking.dto.BookingForItemResponseEntityDTO;
 import ru.practicum.shareit.item.dto.comment.CommentResponseDTO;
-import ru.practicum.shareit.user.dto.UserDTO;
+import ru.practicum.shareit.user.dto.UserResponseDTO;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class ItemResponseDTO {
     private String name;
     private String description;
     private Boolean available;
-    private UserDTO owner;
+    private UserResponseDTO owner;
     private List<CommentResponseDTO> comments;
     private BookingForItemResponseEntityDTO lastBooking;
     private BookingForItemResponseEntityDTO nextBooking;

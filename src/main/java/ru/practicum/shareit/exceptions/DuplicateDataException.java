@@ -7,5 +7,4 @@ public class DuplicateDataException extends ResponseStatusException {
     public DuplicateDataException(String message) {
         super(HttpStatus.CONFLICT, message);
     }
-
 }

@@ -2,14 +2,12 @@ package ru.practicum.shareit.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
 @AllArgsConstructor
-@NoArgsConstructor
 public class ApiError {
     private String message;
     private String debugMessage;

@@ -115,8 +115,8 @@ public class ItemService {
 
     @Transactional(readOnly = true)
     public List<ItemResponseDTO> findAllItems(Integer userId, Integer from, Integer size) {
-        List<ItemResponseDTO> list = itemRepository.
-                findAllByOwnerIdOrderByIdAsc(userId, PageRequest.of(from / size, size)).toList()
+        List<ItemResponseDTO> list = itemRepository
+                .findAllByOwnerIdOrderByIdAsc(userId, PageRequest.of(from / size, size)).toList()
                 .stream()
                 .map(itemMapper::itemToItemResponseDto)
                 .collect(Collectors.toList());

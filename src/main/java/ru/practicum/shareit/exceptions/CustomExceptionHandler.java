@@ -87,7 +87,7 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({UnknownIdException.class, SqlException.class, NoObjectsFoundException.class})
+    @ExceptionHandler({UnknownIdException.class, NoObjectsFoundException.class})
     protected ResponseEntity<Object> handleNotFound(Exception exception, WebRequest request) {
         log.error(exception.getMessage());
         ApiError apiError = new ApiError(exception.getClass().getSimpleName(), exception.getMessage());

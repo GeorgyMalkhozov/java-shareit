@@ -54,7 +54,6 @@ public class ItemRequestService {
         return enrichRequestWithItemsMatched(responseDTO);
     }
 
-  //  @Transactional(readOnly = true)
     public List<ItemRequestResponseDTO> findAllItemRequestsByCurrentUser(Integer userId) {
         userService.checkUserIdExist(userId);
         List<ItemRequest> itemRequests = itemRequestRepository.findAllByRequestorIdOrderByCreatedDesc(userId);
@@ -70,8 +69,8 @@ public class ItemRequestService {
 
     public List<ItemRequestResponseDTO> findOthersItemRequests(Integer userId, Integer from, Integer size) {
         userService.checkUserIdExist(userId);
-        List<ItemRequest> itemRequests = itemRequestRepository.
-                findAllByRequestorIdNotOrderByCreatedDesc(userId, PageRequest.of(from / size, size)).toList();
+        List<ItemRequest> itemRequests = itemRequestRepository
+                .findAllByRequestorIdNotOrderByCreatedDesc(userId, PageRequest.of(from / size, size)).toList();
         return itemRequests.stream()
                 .map(requestMapper::itemRequestToResponseDto)
                 .map(this::enrichRequestWithItemsMatched)

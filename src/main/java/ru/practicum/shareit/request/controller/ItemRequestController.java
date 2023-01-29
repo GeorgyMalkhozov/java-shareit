@@ -41,8 +41,8 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public List<ItemRequestResponseDTO> findOthersItemRequests
-            (@RequestHeader("X-Sharer-User-Id") Integer userId,
+    public List<ItemRequestResponseDTO> findOthersItemRequests(
+             @RequestHeader("X-Sharer-User-Id") Integer userId,
              @RequestParam(defaultValue = "0") @Min(0) Integer from,
              @RequestParam(defaultValue = "5") @Min(0) Integer size) {
         return requestService.findOthersItemRequests(userId, from, size);
