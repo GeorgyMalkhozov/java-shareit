@@ -15,6 +15,8 @@ import ru.practicum.shareit.item.dto.ItemDTO;
 import ru.practicum.shareit.item.dto.ItemResponseDTO;
 import ru.practicum.shareit.item.dto.comment.CommentDTO;
 import ru.practicum.shareit.request.controller.ItemRequestController;
+import ru.practicum.shareit.request.dto.ItemRequestDTO;
+import ru.practicum.shareit.request.dto.ItemRequestResponseDTO;
 import ru.practicum.shareit.user.controller.UserController;
 import ru.practicum.shareit.user.dto.UserDTO;
 import ru.practicum.shareit.user.dto.UserResponseDTO;
@@ -130,5 +132,19 @@ class IntegraTest {
                 .build();
         Assertions.assertThrows(UnknownIdException.class, () -> bookingController
                 .addBookingRequest(bookingDTO1, ownerResponseDTO.getId()));
+    }
+
+    @Test
+    void addRequestToItem() {
+        UserResponseDTO ownerResponseDTO = userController.addUser(ownerDTO);
+        ItemRequestDTO itemRequestDTO = ItemRequestDTO.builder()
+                .description("Требуется пила")
+                .build();
+        ItemRequestResponseDTO itemRequestResponseDTO = requestController.addItemRequest(itemRequestDTO,
+                ownerResponseDTO.getId());
+        itemDTO.setRequestId(itemRequestResponseDTO.getId());
+        ItemResponseDTO itemResponseDTO = itemController.addItem(itemDTO, ownerResponseDTO.getId());
+        Assertions.assertThrows(UnknownIdException.class, () -> requestController.getItemRequest(5,1));
+        Assertions.assertEquals(itemRequestResponseDTO.getId(), itemResponseDTO.getRequestId());
     }
 }

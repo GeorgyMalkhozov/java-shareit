@@ -81,4 +81,10 @@ class ItemMapperTest {
         itemMapper.updateItemFromDto(itemUpdateDTO, item);
         Assertions.assertEquals(itemUpdateDTO.getName(), item.getName());
     }
+
+    @Test
+    void workWithNull() {
+        Assertions.assertNull(itemMapper.itemToItemResponseDto(null));
+        Assertions.assertNull(itemMapper.itemDtoToItem(null));
+    }
 }

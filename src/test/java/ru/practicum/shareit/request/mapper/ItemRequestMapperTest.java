@@ -56,4 +56,10 @@ class ItemRequestMapperTest {
         Assertions.assertNotNull(request);
         Assertions.assertEquals(requestDTO.getDescription(), request.getDescription());
     }
+
+    @Test
+    void workWithNull() {
+        Assertions.assertNull(requestMapper.itemRequestToResponseDto(null));
+        Assertions.assertNull(requestMapper.dtoToItemRequest(null));
+    }
 }

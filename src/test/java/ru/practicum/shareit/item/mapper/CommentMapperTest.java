@@ -67,4 +67,10 @@ class CommentMapperTest {
         Assertions.assertNotNull(comment1);
         Assertions.assertEquals(commentDTO.getText(), comment1.getText());
     }
+
+    @Test
+    void workWithNull() {
+        Assertions.assertNull(commentMapper.commentDtoToComment(null));
+        Assertions.assertNull(commentMapper.commentToCommentForItemResponseEntityDto(null));
+    }
 }
