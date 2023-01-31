@@ -74,6 +74,9 @@ class ItemMapperTest {
     void updateItemFromDto() {
         ItemUpdateDTO itemUpdateDTO = ItemUpdateDTO.builder()
                 .name("Велосипед")
+                .description("Горный велосипед")
+                .owner(userDTO)
+                .available(false)
                 .build();
         itemMapper.updateItemFromDto(itemUpdateDTO, item);
         Assertions.assertEquals(itemUpdateDTO.getName(), item.getName());

@@ -240,11 +240,8 @@ class ItemServiceTest {
     void addComment() {
         when(commentRepository.save(any(Comment.class)))
                 .thenReturn(comment);
-        when(itemRepository.findById(anyInt())).thenReturn(Optional.of(item));
         doNothing().when(itemCheckDao).checkItemExist(anyInt());
-        when(commentRepository.findAllByItemIdAndAuthorId(anyInt(), anyInt())).thenReturn(List.of());
         when(itemRepository.getById(anyInt())).thenReturn(item);
-        when(userService.getUserById(anyInt())).thenReturn(commentator);
         Assertions.assertEquals(commentResponseDTO.getText(),
                 itemService.addComment(commentDTO, 1, 2).getText());
     }

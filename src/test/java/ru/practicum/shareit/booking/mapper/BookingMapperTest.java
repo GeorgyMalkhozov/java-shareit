@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.booking.dto.BookingDTO;
 import ru.practicum.shareit.booking.dto.BookingForItemResponseEntityDTO;
 import ru.practicum.shareit.booking.dto.BookingResponseEntityDTO;
+import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
@@ -85,5 +86,20 @@ class BookingMapperTest {
         Booking booking1 = bookingMapper.bookingDtoToBooking(bookingDTO);
         Assertions.assertNotNull(booking1);
         Assertions.assertEquals(bookingDTO.getId(), booking1.getId());
+    }
+
+    @Test
+    void createBookingForItemResponseEntityDTO() {
+        BookingForItemResponseEntityDTO bookingForItemResponseEntityDTO = BookingForItemResponseEntityDTO.builder()
+                .status(BookingStatus.APPROVED)
+                .start(LocalDateTime.now().plusHours(5))
+                .end(LocalDateTime.now().plusHours(7))
+                .bookerId(1)
+                .build();
+        Assertions.assertNotNull(bookingForItemResponseEntityDTO);
+        Assertions.assertNotNull(bookingForItemResponseEntityDTO.getBookerId());
+        Assertions.assertNotNull(bookingForItemResponseEntityDTO.getStart());
+        Assertions.assertNotNull(bookingForItemResponseEntityDTO.getEnd());
+        Assertions.assertNotNull(bookingForItemResponseEntityDTO.getStatus());
     }
 }

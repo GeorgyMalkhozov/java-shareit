@@ -39,13 +39,6 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler({ObjectAccessDeniedException.class})
-    protected ResponseEntity<Object> handleObjectAccessDeniedException(Exception exception, WebRequest request) {
-        log.error(exception.getMessage());
-        ApiError apiError = new ApiError(exception.getClass().getSimpleName(), exception.getMessage());
-        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
-    }
-
     @ExceptionHandler({ItemUnavailableException.class, NegativeBookingLengthException.class,
             NoCommentWithoutBookingException.class, WrongApproveException.class})
     protected ResponseEntity<Object> handleBadRequestTypeException(Exception exception, WebRequest request) {

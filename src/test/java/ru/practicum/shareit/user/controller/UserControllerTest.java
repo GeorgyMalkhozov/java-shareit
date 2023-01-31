@@ -166,7 +166,7 @@ class UserControllerTest {
     }
 
     @Test
-    void updateItem() throws Exception  {
+    void updateUser() throws Exception {
         UserResponseDTO renewedUserDto = new UserResponseDTO(
                 1,
                 "John Doe 2",

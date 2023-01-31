@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exceptions.DuplicateDataException;
 import ru.practicum.shareit.exceptions.NoObjectsFoundException;
-import ru.practicum.shareit.exceptions.ObjectAccessDeniedException;
 import ru.practicum.shareit.item.dao.ItemCheckDao;
 import ru.practicum.shareit.item.dto.ItemDTO;
 import ru.practicum.shareit.item.dto.ItemResponseDTO;
@@ -144,7 +143,6 @@ public class ItemService {
         itemCheckDao.checkItemExist(itemId);
         bookingService.checkCommentatorWasABookerBeforeComment(itemId, userId);
         checkRepeatedCommentByAuthor(itemId, userId);
-        checkCommentatorIsNotAuthor(itemId,userId);
     }
 
     private void addOwnerToItem(Item item, Integer userId) {
@@ -174,12 +172,6 @@ public class ItemService {
     private void checkItem(Integer itemId, Integer userId) {
         itemCheckDao.checkItemExist(itemId);
         itemCheckDao.checkUserAccessToItem(userId, itemRepository.getById(itemId));
-    }
-
-    private void checkCommentatorIsNotAuthor(Integer itemId, Integer userId) {
-        if (itemRepository.getById(itemId).getOwner().getId().equals(userId)) {
-            throw new ObjectAccessDeniedException("Владелец вещи не может оставлять комментарии к ней");
-        }
     }
 
     private void checkRepeatedCommentByAuthor(Integer itemId, Integer userId) {

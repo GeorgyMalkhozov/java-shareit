@@ -4,8 +4,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.TransactionSystemException;
 import ru.practicum.shareit.exceptions.DuplicateDataException;
 import ru.practicum.shareit.exceptions.UnknownIdException;
+import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.user.dto.UserDTO;
 import ru.practicum.shareit.user.dto.UserResponseDTO;
 import ru.practicum.shareit.user.dto.UserUpdateDTO;
@@ -136,11 +138,21 @@ class UserServiceTest {
         when(userRepository.getById(anyInt())).thenReturn(user);
         when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class)))
-                .thenReturn(user);
-        when(userRepository.save(any(User.class)))
-                .thenThrow(DuplicateDataException.class);
+                .thenThrow(DataIntegrityViolationException.class);
         Assertions.assertThrows(DuplicateDataException.class, () -> userService.updateUser(1, userUpdateDTO));
+    }
 
+    @Test
+    void updateUserWrongNameAndEmail() {
+        UserUpdateDTO userUpdateDTO = UserUpdateDTO.builder()
+                .name("")
+                .email("")
+                .build();
+        when(userRepository.getById(anyInt())).thenReturn(user);
+        when(userRepository.findById(anyInt())).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class)))
+                .thenThrow(TransactionSystemException.class);
+        Assertions.assertThrows(ValidationException.class, () -> userService.updateUser(1, userUpdateDTO));
     }
 
     @Test

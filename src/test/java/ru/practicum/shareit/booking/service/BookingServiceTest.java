@@ -14,10 +14,7 @@ import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.exceptions.NegativeBookingLengthException;
-import ru.practicum.shareit.exceptions.NoCommentWithoutBookingException;
-import ru.practicum.shareit.exceptions.NoObjectsFoundException;
-import ru.practicum.shareit.exceptions.WrongApproveException;
+import ru.practicum.shareit.exceptions.*;
 import ru.practicum.shareit.item.dao.ItemCheckDao;
 import ru.practicum.shareit.item.dto.ItemDTO;
 import ru.practicum.shareit.item.dto.ItemResponseDTO;
@@ -152,10 +149,17 @@ class BookingServiceTest {
 
     @Test
     void addBookingRequestError() {
+        BookingDTO booking2DTO = BookingDTO.builder()
+                .id(2)
+                .booker(bookerDTO)
+                .itemId(1)
+                .start(LocalDateTime.now().plusHours(5))
+                .end(LocalDateTime.now().plusHours(1))
+                .build();
         when(bookingRepository.save(any(Booking.class)))
                 .thenThrow(NegativeBookingLengthException.class);
         Assertions.assertThrows(NegativeBookingLengthException.class,
-                () -> bookingService.addBookingRequest(booking1DTO, 2));
+                () -> bookingService.addBookingRequest(booking2DTO, 2));
     }
 
     @Test
@@ -172,6 +176,14 @@ class BookingServiceTest {
                 .thenReturn(new PageImpl<>(List.of(booking1)));
         Assertions.assertEquals(List.of(booking1ResponseEntityDTO),
                 bookingService.findAllBookingsByCurrentUser(2,"PAST",0,5));
+    }
+
+    @Test
+    void findAllBookingsByCurrentUserWrongState() {
+        when(bookingRepository.findAllByBookerIdOrderByStartDesc(anyInt(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(booking1)));
+        Assertions.assertThrows(NoSuchStateException.class,
+                () -> bookingService.findAllBookingsByCurrentUser(2,"XDFSF",0,5));
     }
 
     @ParameterizedTest
@@ -210,9 +222,7 @@ class BookingServiceTest {
 
     @Test
     void approveBookingWrong() {
-        booking1.setStatus(BookingStatus.WAITING);
-        when(bookingRepository.save(any(Booking.class)))
-                .thenThrow(WrongApproveException.class);
+        booking1.setStatus(BookingStatus.CANCELED);
         when(bookingRepository.findAllBookingsForOwner(anyInt(), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(booking1)));
         when(itemRepository.findAllByOwnerIdOrderByIdAsc(anyInt()))

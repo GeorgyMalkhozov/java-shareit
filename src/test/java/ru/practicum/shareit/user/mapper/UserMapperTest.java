@@ -60,4 +60,12 @@ class UserMapperTest {
         Assertions.assertEquals(userDTO.getId(), user.getId());
         Assertions.assertEquals(userUpdateDTO.getName(), user.getName());
     }
+
+    @Test
+    void workWithNull() {
+        Assertions.assertNull(userMapper.userDtoToUser(null));
+        Assertions.assertNull(userMapper.userToUserDto(null));
+        Assertions.assertNull(userMapper.userToUserResponseDto(null));
+    }
+
 }
