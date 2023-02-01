@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import ru.practicum.shareit.booking.dto.BookingDTO;
 import ru.practicum.shareit.booking.dto.BookingResponseEntityDTO;
-import ru.practicum.shareit.booking.enums.BookingStateConverter;
 import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -53,8 +52,6 @@ class BookingServiceTest {
     private BookingDTO booking1DTO;
     private BookingResponseEntityDTO booking1ResponseEntityDTO;
 
-    private BookingStateConverter bookingStateConverter;
-
     @BeforeEach
     public void defaultSetUp() {
 
@@ -63,7 +60,6 @@ class BookingServiceTest {
         bookingRepository = mock(BookingRepository.class);
         bookingMapper = mock(BookingMapper.class);
         itemCheckDao = mock(ItemCheckDao.class);
-        bookingStateConverter = mock(BookingStateConverter.class);
         bookingService = new BookingService(bookingRepository, itemRepository,
                 userService, bookingMapper, itemCheckDao);
 

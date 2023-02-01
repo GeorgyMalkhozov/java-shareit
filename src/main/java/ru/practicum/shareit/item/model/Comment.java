@@ -9,8 +9,8 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @Validated

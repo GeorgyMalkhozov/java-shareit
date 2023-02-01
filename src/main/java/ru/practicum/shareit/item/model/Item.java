@@ -9,8 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @Validated

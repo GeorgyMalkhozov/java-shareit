@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDTO;
 import ru.practicum.shareit.booking.dto.BookingResponseEntityDTO;
 import ru.practicum.shareit.booking.enums.BookingState;
-import ru.practicum.shareit.booking.enums.BookingStateConverter;
 import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -118,8 +117,7 @@ public class BookingService {
     }
 
     private List<Booking> filterForResponse(List<Booking> bookings, String state) {
-        BookingState bookingState = Optional.ofNullable(new BookingStateConverter().convert(state))
-                        .orElseThrow(() -> new NoSuchStateException("Unknown state: " + state));
+     BookingState bookingState = BookingState.convert(state);
         switch (bookingState) {
             case REJECTED:
                 return bookings.stream()

@@ -2,7 +2,8 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.booking.dto.BookingForItemResponseEntityDTO;
 import ru.practicum.shareit.item.dto.comment.CommentResponseDTO;
@@ -10,7 +11,8 @@ import ru.practicum.shareit.user.dto.UserResponseDTO;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @Builder
 @Validated

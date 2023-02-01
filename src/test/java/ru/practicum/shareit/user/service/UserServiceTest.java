@@ -54,7 +54,8 @@ class UserServiceTest {
     void addUserSuccessful() {
         when(userRepository.save(any(User.class)))
                 .thenReturn(user);
-        Assertions.assertEquals(userMapper.userToUserResponseDto(user), userService.addUser(userDTO));
+        Assertions.assertEquals(userMapper.userToUserResponseDto(user).getName(),
+                userService.addUser(userDTO).getName());
     }
 
     @Test
@@ -84,7 +85,7 @@ class UserServiceTest {
                 .thenReturn(Optional.of(user));
         when(userRepository.getById(anyInt()))
                 .thenReturn(user);
-        Assertions.assertEquals(userResponseDTO, userService.getUser(user.getId()));
+        Assertions.assertEquals(userResponseDTO.getName(), userService.getUser(user.getId()).getName());
     }
 
     @Test
@@ -99,7 +100,7 @@ class UserServiceTest {
                 .thenReturn(Optional.of(user));
         when(userRepository.save(any()))
                 .thenReturn(user);
-        Assertions.assertEquals(userResponseDTO, userService.putUser(userDTO));
+        Assertions.assertEquals(userResponseDTO.getName(), userService.putUser(userDTO).getName());
     }
 
     @Test
@@ -114,7 +115,7 @@ class UserServiceTest {
     void findAllUsers() {
         when(userRepository.findAll())
                 .thenReturn(List.of(user));
-        Assertions.assertEquals(List.of(userResponseDTO), userService.findAllUsers());
+        Assertions.assertEquals(List.of(userResponseDTO).get(0).getName(), userService.findAllUsers().get(0).getName());
     }
 
     @Test

@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import ru.practicum.shareit.exceptions.NoSuchStateException;
 
 @AllArgsConstructor
 @Getter
@@ -16,4 +17,12 @@ public enum BookingState {
 
     private final String name;
     private final int id;
+
+    public static BookingState convert(String state) {
+        try {
+            return BookingState.valueOf(state);
+        } catch (IllegalArgumentException e) {
+            throw new NoSuchStateException("Unknown state: " + state);
+        }
+    }
 }
