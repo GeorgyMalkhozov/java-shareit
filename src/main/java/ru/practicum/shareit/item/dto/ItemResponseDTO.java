@@ -2,19 +2,19 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.booking.dto.BookingForItemResponseEntityDTO;
 import ru.practicum.shareit.item.dto.comment.CommentResponseDTO;
-import ru.practicum.shareit.user.dto.UserDTO;
+import ru.practicum.shareit.user.dto.UserResponseDTO;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @Builder
-@NoArgsConstructor
 @Validated
 public class ItemResponseDTO {
 
@@ -22,8 +22,9 @@ public class ItemResponseDTO {
     private String name;
     private String description;
     private Boolean available;
-    private UserDTO owner;
+    private UserResponseDTO owner;
     private List<CommentResponseDTO> comments;
     private BookingForItemResponseEntityDTO lastBooking;
     private BookingForItemResponseEntityDTO nextBooking;
+    private Integer requestId;
 }

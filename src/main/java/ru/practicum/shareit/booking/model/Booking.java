@@ -10,8 +10,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @Validated

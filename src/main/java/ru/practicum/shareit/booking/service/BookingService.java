@@ -1,12 +1,12 @@
 package ru.practicum.shareit.booking.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDTO;
 import ru.practicum.shareit.booking.dto.BookingResponseEntityDTO;
 import ru.practicum.shareit.booking.enums.BookingState;
-import ru.practicum.shareit.booking.enums.BookingStateConverter;
 import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -59,19 +59,23 @@ public class BookingService {
     }
 
     @Transactional(readOnly = true)
-    public List<BookingResponseEntityDTO> findAllBookingsByCurrentUser(Integer userId, String bookingState) {
+    public List<BookingResponseEntityDTO> findAllBookingsByCurrentUser(Integer userId, String bookingState,
+                                                                       Integer from, Integer size) {
         userService.checkUserIdExist(userId);
-        List<Booking> bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(userId);
+        List<Booking> bookings = bookingRepository
+                .findAllByBookerIdOrderByStartDesc(userId, PageRequest.of(from / size, size)).toList();
         return filterForResponse(bookings, bookingState).stream()
                 .map(bookingMapper::bookingToBookingResponseEntityDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<BookingResponseEntityDTO> findAllBookingsForOwner(Integer userId, String bookingState) {
+    public List<BookingResponseEntityDTO> findAllBookingsForOwner(Integer userId, String bookingState,
+                                                                  Integer from, Integer size) {
         userService.checkUserIdExist(userId);
         checkOwnerHasItemsToBook(userId);
-        List<Booking> bookings = bookingRepository.findAllBookingsForOwner(userId);
+        List<Booking> bookings = bookingRepository.findAllBookingsForOwner(userId,
+                PageRequest.of(from / size, size)).toList();
         return filterForResponse(bookings, bookingState).stream()
                 .map(bookingMapper::bookingToBookingResponseEntityDto)
                 .collect(Collectors.toList());
@@ -113,8 +117,7 @@ public class BookingService {
     }
 
     private List<Booking> filterForResponse(List<Booking> bookings, String state) {
-        BookingState bookingState = Optional.ofNullable(new BookingStateConverter().convert(state))
-                        .orElseThrow(() -> new NoSuchStateException("Unknown state: " + state));
+     BookingState bookingState = BookingState.convert(state);
         switch (bookingState) {
             case REJECTED:
                 return bookings.stream()
