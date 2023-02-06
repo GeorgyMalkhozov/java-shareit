@@ -37,7 +37,7 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> putItem(ItemDTO itemDto, Integer userId) {
-        return put("",userId , itemDto);
+        return put("", userId , itemDto);
     }
 
     public ResponseEntity<Object> deleteItem(Integer itemId, Integer userId) {
