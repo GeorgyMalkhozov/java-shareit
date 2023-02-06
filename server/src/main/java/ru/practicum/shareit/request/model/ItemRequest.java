@@ -5,7 +5,6 @@ import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Getter
@@ -21,7 +20,6 @@ public class ItemRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotBlank(message = "описание не должно быть пустым")
     @Column(name = "description", nullable = false)
     private String description;
     @OneToOne(fetch = FetchType.LAZY)

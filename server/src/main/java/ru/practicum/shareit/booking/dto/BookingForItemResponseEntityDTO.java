@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.item.dto.ItemDTO;
 
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @AllArgsConstructor
-@Validated
 public class BookingForItemResponseEntityDTO {
 
     private Integer id;

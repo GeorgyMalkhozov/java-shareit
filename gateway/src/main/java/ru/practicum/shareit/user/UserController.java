@@ -29,11 +29,6 @@ public class UserController {
         return userClient.getUser(id);
     }
 
-   /* @PutMapping
-    public UserResponseDTO putUser(@Valid @RequestBody UserDTO dto) {
-        return userClient.putUser(dto);
-    }*/
-
     @DeleteMapping("/{id}")
     public void removeUser(@PathVariable Integer id) {
         userClient.deleteUser(id);

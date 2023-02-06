@@ -1,18 +1,14 @@
 package ru.practicum.shareit.request.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDTO;
 import ru.practicum.shareit.request.dto.ItemRequestResponseDTO;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
-@Validated
 @RequestMapping(path = "/requests")
 public class ItemRequestController {
 
@@ -24,7 +20,7 @@ public class ItemRequestController {
     }
 
     @PostMapping
-    public ItemRequestResponseDTO addItemRequest(@RequestBody @Valid ItemRequestDTO dto,
+    public ItemRequestResponseDTO addItemRequest(@RequestBody ItemRequestDTO dto,
                                                  @RequestHeader("X-Sharer-User-Id") Integer userId) {
         return requestService.addItemRequest(dto, userId);
     }
@@ -43,8 +39,8 @@ public class ItemRequestController {
     @GetMapping("/all")
     public List<ItemRequestResponseDTO> findOthersItemRequests(
              @RequestHeader("X-Sharer-User-Id") Integer userId,
-             @RequestParam(defaultValue = "0") @Min(0) Integer from,
-             @RequestParam(defaultValue = "5") @Min(0) Integer size) {
+             @RequestParam(defaultValue = "0") Integer from,
+             @RequestParam(defaultValue = "5") Integer size) {
         return requestService.findOthersItemRequests(userId, from, size);
     }
 }

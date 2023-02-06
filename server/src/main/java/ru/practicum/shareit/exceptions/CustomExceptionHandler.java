@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,17 +42,6 @@ public class CustomExceptionHandler {
     protected ResponseEntity<Object> handleBadRequestTypeException(Exception exception, WebRequest request) {
         log.error(exception.getMessage());
         ApiError apiError = new ApiError(exception.getClass().getSimpleName(), exception.getLocalizedMessage());
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({ConstraintViolationException.class})
-    public ResponseEntity<Object> handleConstraintViolationException(final ConstraintViolationException exception,
-                                                                     WebRequest request) {
-        List<String> listError = exception.getConstraintViolations().stream()
-                .map(ConstraintViolation::getMessage)
-                .collect(Collectors.toList());
-        log.error(exception.getMessage());
-        ApiError apiError = new ApiError(exception.getClass().getSimpleName(), listError.toString());
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 

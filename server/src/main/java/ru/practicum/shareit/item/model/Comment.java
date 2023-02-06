@@ -5,7 +5,6 @@ import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -21,7 +20,6 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotBlank(message = "отзвы не должен быть пустым")
     @Column(name = "text", nullable = false)
     private String text;
     @ManyToOne(fetch = FetchType.LAZY)

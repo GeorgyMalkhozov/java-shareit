@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.validation.annotation.Validated;
 import ru.practicum.shareit.booking.dto.BookingForItemResponseEntityDTO;
 import ru.practicum.shareit.item.dto.comment.CommentResponseDTO;
 import ru.practicum.shareit.user.dto.UserResponseDTO;
@@ -15,7 +14,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @Builder
-@Validated
 public class ItemResponseDTO {
 
     private Integer id;

@@ -24,7 +24,8 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> addItem(@RequestBody @Valid ItemDTO dto, @RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public ResponseEntity<Object> addItem(@RequestBody @Valid ItemDTO dto,
+                                          @RequestHeader("X-Sharer-User-Id") Integer userId) {
         return itemClient.addItem(dto, userId);
     }
 
@@ -42,7 +43,8 @@ public class ItemController {
     }
 
     @PutMapping
-    public ResponseEntity<Object> putItem(@Valid @RequestBody ItemDTO dto, @RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public ResponseEntity<Object> putItem(@Valid @RequestBody ItemDTO dto,
+                                          @RequestHeader("X-Sharer-User-Id") Integer userId) {
         return itemClient.putItem(dto, userId);
     }
 

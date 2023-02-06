@@ -33,10 +33,6 @@ public class UserClient extends BaseClient {
         return get("/" + userId);
     }
 
-    /*public ResponseEntity<Object> putUser(UserDTO userDto) {
-        return put("", userDto);
-    }*/
-
     public ResponseEntity<Object> deleteUser(Integer userId) {
         return delete("/" + userId);
     }

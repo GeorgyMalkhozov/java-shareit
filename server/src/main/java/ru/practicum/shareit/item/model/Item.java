@@ -6,7 +6,6 @@ import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 @AllArgsConstructor
 @Getter
@@ -21,10 +20,8 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotBlank(message = "название вещи не должно быть пустым")
     @Column(name = "name", nullable = false)
     private String name;
-    @NotBlank(message = "описание вещи не должно быть пустым")
     @Column(name = "description", nullable = false)
     private String description;
     @Column(name = "is_available", nullable = false)
